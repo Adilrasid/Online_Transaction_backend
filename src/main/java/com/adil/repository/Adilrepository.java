@@ -7,10 +7,11 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
 
 import com.adil.model.User;
 
-public interface Adilrepository extends JpaRepository<User, String> // repository for Registration
+public interface Adilrepository extends CrudRepository<User, Long> // repository for Registration
 
 {
 
@@ -23,7 +24,7 @@ public interface Adilrepository extends JpaRepository<User, String> // repositor
 
 	public Optional<User> findByEmailId(String emailId);
 	
-	public List<User> findById(long id);
+	public List<User> findByUserId(long uid);
 
 	public String findByPassword(String pass);
 

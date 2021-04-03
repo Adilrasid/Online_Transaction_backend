@@ -24,8 +24,8 @@ public class User {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="id")
-	private long id;
+	@Column(name="userId")
+	private long userId;
 	
 	@Column(name="firstName")
 	private String firstName;
@@ -52,25 +52,33 @@ public class User {
 	@CreationTimestamp
 	@Column(name = "modifiedDate")
 	private LocalDateTime modifiedDate;
+	
+	@Column(name = "verify",nullable = false)
+	public int verify;
 
 	public User() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public User(int id, String firstName, String lastName, String emailId,  String password, String mobileNumer, String DOB,
-			LocalDateTime registeredDate,LocalDateTime modifiedDate ) {
+	public User(long userId, String firstName, String lastName, String emailId, String password, String mobileNumer,
+			String dOB, LocalDateTime registeredDate, LocalDateTime modifiedDate, int verify) {
 		super();
-		this.id = id;
-		this.firstName =firstName;
+		this.userId = userId;
+		this.firstName = firstName;
 		this.lastName = lastName;
 		this.emailId = emailId;
 		this.password = password;
 		this.mobileNumer = mobileNumer;
-		this.DOB = DOB;
+		DOB = dOB;
 		this.registeredDate = registeredDate;
 		this.modifiedDate = modifiedDate;
+		this.verify = verify;
 	}
+	
+	
+
+	
 	
 	
 	
