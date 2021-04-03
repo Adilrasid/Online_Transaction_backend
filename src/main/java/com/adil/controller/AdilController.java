@@ -1,9 +1,14 @@
 package com.adil.controller;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,13 +20,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.adil.Exception.UserDoesNotExitException;
 import com.adil.config.RabbitMQSender;
 import com.adil.dto.LoginForm;
 import com.adil.dto.RegistrationForm;
+import com.adil.model.OTP;
 import com.adil.model.User;
 import com.adil.repository.Adilrepository;
+import com.adil.repository.OTPRepository;
 import com.adil.response.Response;
 import com.adil.service.AdilService;
+import com.adil.service.OTPService;
 
 @RestController
 public class AdilController {
@@ -99,4 +108,5 @@ public class AdilController {
 		return new ResponseEntity<Response>(res, HttpStatus.OK);
 
 	}
+	
 }

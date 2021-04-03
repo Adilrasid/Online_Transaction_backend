@@ -1,39 +1,58 @@
 package com.adil.service;
 
+import java.io.Writer;
 import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
+import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 
 import javax.security.auth.message.MessageInfo;
 
 import org.springframework.core.env.Environment;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.hibernate.cfg.Configuration;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import com.adil.Exception.UserDoesNotExitException;
 import com.adil.config.RabbitMQSender;
 import com.adil.dto.LoginForm;
 import com.adil.dto.RegistrationForm;
+import com.adil.model.OTP;
 import com.adil.model.User;
 import com.adil.repository.Adilrepository;
+import com.adil.repository.OTPRepository;
 import com.adil.response.Response;
 import com.adil.utils.MailObject;
 import com.adil.utils.TokenUtil;
+
+import net.bytebuddy.utility.RandomString;
 
 @PropertySource(name = "User", value = { "classpath:response.properties" })
 @Service
 public class AdilService {
 	@Autowired
 	private Adilrepository adil;
+
+	@Autowired
+	private static OTPRepository otprepo;
 
 	@Autowired
 	private Environment environment;
@@ -78,10 +97,8 @@ public class AdilService {
 				u.setVerify(0);
 				adil.save(u);
 
-				 String token = tokenutil.createToken(u.getUserId());
-				rabbitMq.send(simpleMessage(u.getEmailId(), "Valid User Check", "verifyUser/"
-				+ token));
-
+				String token = tokenutil.createToken(u.getUserId());
+				rabbitMq.send(simpleMessage(u.getEmailId(), "Valid User Check", "verifyUser/" + token));
 
 				return new Response(200, "Hi Adil Data Inserted");
 
@@ -102,6 +119,8 @@ public class AdilService {
 
 		else if (logi.getEmailId().equals(user.get().getEmailId())
 				&& logi.getPassword().equals(user.get().getPassword())) {
+
+			// AdilService.generateNewOtp(@RequestBody OTP otp);
 
 			String token = tokenutil.createToken(user.get().getUserId());
 			System.out.println(token);
@@ -148,7 +167,8 @@ public class AdilService {
 
 	}
 
-	public static SimpleMailMessage simpleMessage(String email, String subject, String token) //Method for sending Email.
+	public static SimpleMailMessage simpleMessage(String email, String subject, String token) // Method for sending
+																								// Email.
 	{
 		SimpleMailMessage smm = new SimpleMailMessage();
 		smm.setTo(email);

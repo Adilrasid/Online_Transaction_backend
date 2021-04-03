@@ -4,12 +4,15 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import com.adil.model.User;
+
+
 
 public interface Adilrepository extends CrudRepository<User, Long> // repository for Registration
 
@@ -29,3 +32,4 @@ public interface Adilrepository extends CrudRepository<User, Long> // repository
 	public String findByPassword(String pass);
 
 }
+
